@@ -1,3 +1,5 @@
+const User = require('../modles/user')
+
 module.exports.renderRegister = (req,res)=>{
     res.render('users/register');
 }
