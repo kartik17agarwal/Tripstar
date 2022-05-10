@@ -77,11 +77,9 @@ app.use('/campgrounds' , campgroundRoutes);
 app.use('/campgrounds/:id/reviews' , reviewRoutes);
 app.use('/' , userRoutes);
 
-
-app.get('/',async (req,res)=>{
-    const campgrounds = await Campground.find({});
-    res.render('campgrounds/index',{campgrounds});
-})
+app.get('/', (req, res) => {
+    res.render('home');
+});
 
 app.all('*',(req,res,next)=>{
     next(new ExpressError("Page not Found",404));
