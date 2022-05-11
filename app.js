@@ -18,11 +18,11 @@ const LocalStrtergy = require('passport-local');
 const passport = require('passport');
 const User = require('./modles/user')
 const mongoSanitize = require('express-mongo-sanitize');
-const MongoDBStore = require("connect-mongo")(session);
+const MongoDBStore = require("connect-mongo").default;
 const campgroundRoutes = require('./routes/campgrounds')
 const reviewRoutes = require('./routes/reviews')
 const userRoutes = require('./routes/users')
-const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yelp-camp';
+const dbUrl = process.env.DB_URL || 'mongodb://localhost:3000/campgrounds';
 
 mongoose.connect(dbUrl, {
     useNewUrlParser: true,
@@ -50,7 +50,7 @@ app.set('views' , path.join( __dirname , 'views' ));
 
 const secret = process.env.SECRET || "thisisasecretsokeepquiet!!";
 
-const store = new MongoDBStore({
+const store = MongoDBStore.create({
     url: dbUrl,
     secret,
     touchAfter: 24 * 60 * 60
