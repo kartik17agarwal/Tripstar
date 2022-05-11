@@ -18,12 +18,18 @@ const LocalStrtergy = require('passport-local');
 const passport = require('passport');
 const User = require('./modles/user')
 const mongoSanitize = require('express-mongo-sanitize');
-
+const MongoDBStore = require("connect-mongo")(session);
 const campgroundRoutes = require('./routes/campgrounds')
 const reviewRoutes = require('./routes/reviews')
 const userRoutes = require('./routes/users')
+const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yelp-camp';
 
-mongoose.connect('mongodb://localhost:27017/yelp-camp');
+mongoose.connect(dbUrl, {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false
+});
 
 app.use(express.urlencoded({
     extended: true
@@ -42,7 +48,20 @@ app.engine('ejs',ejsMate);
 app.set('view engine','ejs');
 app.set('views' , path.join( __dirname , 'views' ));
 
+const store = new MongoDBStore({
+    url: dbUrl,
+    secret,
+    touchAfter: 24 * 60 * 60
+});
+
+store.on("error", function (e) {
+    console.log("SESSION STORE ERROR", e)
+})
+
+
 const sessionConfig = {
+    store,
+    name : "trip",
     secret : "thisisasecret",
     resave : false,
     saveUninitialized : true,
