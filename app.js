@@ -17,6 +17,7 @@ const flash = require('connect-flash')
 const LocalStrtergy = require('passport-local');
 const passport = require('passport');
 const User = require('./modles/user')
+const mongoSanitize = require('express-mongo-sanitize');
 
 const campgroundRoutes = require('./routes/campgrounds')
 const reviewRoutes = require('./routes/reviews')
@@ -52,6 +53,7 @@ const sessionConfig = {
     }
 }
 
+app.use(mongoSanitize());
 
 app.use(session(sessionConfig));
 app.use(flash());
